@@ -1,4 +1,6 @@
-package com.github.gerdreiss.kafka.tutorial1
+package com.github.gerdreiss
+package kafka
+package tutorial1
 
 import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.ProducerConfig.BOOTSTRAP_SERVERS_CONFIG
@@ -7,7 +9,7 @@ import org.apache.kafka.clients.producer.ProducerConfig.VALUE_SERIALIZER_CLASS_C
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.apache.kafka.common.serialization.StringSerializer
 
-import com.github.gerdreiss.kafka.utils.Extensions._
+import utils.Extensions._
 
 import scala.util.Properties
 
