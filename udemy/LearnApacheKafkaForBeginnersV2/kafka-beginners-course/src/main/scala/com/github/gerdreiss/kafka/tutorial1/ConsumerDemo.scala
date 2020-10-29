@@ -2,16 +2,17 @@ package com.github.gerdreiss
 package kafka
 package tutorial1
 
-import org.slf4j.LoggerFactory
-
-import utils.Extensions._
 import org.apache.kafka.clients.consumer.ConsumerConfig.AUTO_OFFSET_RESET_CONFIG
 import org.apache.kafka.clients.consumer.ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG
 import org.apache.kafka.clients.consumer.ConsumerConfig.GROUP_ID_CONFIG
 import org.apache.kafka.clients.consumer.ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG
 import org.apache.kafka.clients.consumer.ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG
-import org.apache.kafka.common.serialization.StringDeserializer
 import org.apache.kafka.clients.consumer.KafkaConsumer
+import org.apache.kafka.common.serialization.StringDeserializer
+import org.slf4j.LoggerFactory
+
+import utils.Extensions._
+
 import java.{ util => ju }
 import java.time.Duration
 
