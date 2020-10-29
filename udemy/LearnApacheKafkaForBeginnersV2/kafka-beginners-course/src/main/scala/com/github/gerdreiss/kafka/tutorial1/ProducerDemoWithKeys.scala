@@ -21,7 +21,7 @@ import scala.util.Properties
 import java.{ util => ju }
 
 object ProducerDemoWithKeys extends App {
-  val logger = LoggerFactory.getLogger(ProducerDemoWithCallback.getClass())
+  val logger = LoggerFactory.getLogger(this.getClass())
 
   val bootstrapServers = "127.0.0.1:9092"
   val stringSerializer = classOf[StringSerializer].getName()

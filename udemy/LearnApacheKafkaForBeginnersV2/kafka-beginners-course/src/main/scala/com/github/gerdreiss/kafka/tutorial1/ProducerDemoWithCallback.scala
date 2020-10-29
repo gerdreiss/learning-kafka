@@ -21,7 +21,7 @@ import scala.util.Properties
 import java.{ util => ju }
 
 object ProducerDemoWithCallback extends App {
-  val logger = LoggerFactory.getLogger(ProducerDemoWithCallback.getClass())
+  val logger = LoggerFactory.getLogger(this.getClass())
 
   val bootstrapServers = "127.0.0.1:9092"
   val stringSerializer = classOf[StringSerializer].getName()
@@ -52,15 +52,15 @@ object ProducerDemoWithCallback extends App {
         // executes every time a record is successfully sent
         if (ex == null) {
           logger.info(s"""
-          |======================================
-          |Received new metadata:
-          |======================================
-          |  Topic:     ${metadata.topic()}
-          |  Partition: ${metadata.partition()}
-          |  Offsets:   ${metadata.offset()}
-          |  Timestamp: ${metadata.timestamp()}
-          |======================================
-          """.stripMargin)
+            |======================================
+            |Received new metadata:
+            |======================================
+            |  Topic:     ${metadata.topic()}
+            |  Partition: ${metadata.partition()}
+            |  Offsets:   ${metadata.offset()}
+            |  Timestamp: ${metadata.timestamp()}
+            |======================================
+            """.stripMargin)
         }
         // or an exception is thrown
         else {
