@@ -16,11 +16,12 @@ import utils.Extensions._
 import java.{ util => ju }
 import java.time.Duration
 
-object ConsumerDemo extends App {
+object ConsumerDemoGroups extends App {
 
   val logger = LoggerFactory.getLogger(this.getClass())
   val bootstrapServer = "127.0.0.1:9092"
   val stringDeserializer = classOf[StringDeserializer].getName()
+  val groupId = "my-first-application"
   val topic = "first_topic"
 
   // 1. create consumer config
@@ -29,6 +30,7 @@ object ConsumerDemo extends App {
       BOOTSTRAP_SERVERS_CONFIG -> bootstrapServer,
       KEY_DESERIALIZER_CLASS_CONFIG -> stringDeserializer,
       VALUE_DESERIALIZER_CLASS_CONFIG -> stringDeserializer,
+      GROUP_ID_CONFIG -> groupId,
       AUTO_OFFSET_RESET_CONFIG -> "earliest"
     ).toJavaProperties
 
