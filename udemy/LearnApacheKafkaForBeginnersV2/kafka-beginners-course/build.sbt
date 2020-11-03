@@ -35,6 +35,7 @@ lazy val commonSettings = Seq(
 lazy val dependencies = Seq(
   libraryDependencies ++= Seq(
     org.kafka.`kafka-clients`,
+    org.elasticsearch.client.`elasticsearch-rest-high-level-client`,
     org.slf4j.`slf4j-simple`,
     com.fasterxml.jackson.core.`jackson-databind`
   ),

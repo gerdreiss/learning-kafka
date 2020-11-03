@@ -30,6 +30,13 @@ object Dependencies {
         "org.augustjune" %% "context-applied" % "0.1.4"
     }
 
+    case object elasticsearch {
+      case object client {
+        val `elasticsearch-rest-high-level-client` =
+          "org.elasticsearch.client" % "elasticsearch-rest-high-level-client" % "7.9.3"
+      }
+    }
+
     case object kafka {
       val `kafka-clients` =
         "org.apache.kafka" % "kafka-clients" % "2.6.0"
