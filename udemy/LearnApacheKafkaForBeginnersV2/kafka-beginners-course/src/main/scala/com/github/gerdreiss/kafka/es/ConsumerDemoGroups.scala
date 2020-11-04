@@ -1,12 +1,8 @@
 package com.github.gerdreiss
 package kafka
-package tutorial1
+package es
 
-import org.apache.kafka.clients.consumer.ConsumerConfig.AUTO_OFFSET_RESET_CONFIG
-import org.apache.kafka.clients.consumer.ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG
-import org.apache.kafka.clients.consumer.ConsumerConfig.GROUP_ID_CONFIG
-import org.apache.kafka.clients.consumer.ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG
-import org.apache.kafka.clients.consumer.ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG
+import org.apache.kafka.clients.consumer.ConsumerConfig._
 import org.apache.kafka.clients.consumer.KafkaConsumer
 import org.apache.kafka.common.serialization.StringDeserializer
 import org.slf4j.LoggerFactory
@@ -33,7 +29,9 @@ object ConsumerDemoGroups {
         KEY_DESERIALIZER_CLASS_CONFIG -> stringDeserializer,
         VALUE_DESERIALIZER_CLASS_CONFIG -> stringDeserializer,
         GROUP_ID_CONFIG -> groupId,
-        AUTO_OFFSET_RESET_CONFIG -> "earliest"
+        AUTO_OFFSET_RESET_CONFIG -> "earliest",
+        ENABLE_AUTO_COMMIT_CONFIG -> "false",
+        MAX_POLL_RECORDS_CONFIG -> "100"
       ).toJavaProperties
 
     // 2. create consumer

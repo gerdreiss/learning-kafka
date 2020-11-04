@@ -9,7 +9,7 @@ ThisBuild / scalacOptions ++= Seq(
   "-feature",
   "-language:_",
   "-unchecked",
-  "-Xfatal-warnings",
+  //"-Xfatal-warnings",
   "-Ymacro-annotations"
 )
 
@@ -37,7 +37,8 @@ lazy val dependencies = Seq(
     org.kafka.`kafka-clients`,
     org.elasticsearch.client.`elasticsearch-rest-high-level-client`,
     org.slf4j.`slf4j-simple`,
-    com.fasterxml.jackson.core.`jackson-databind`
+    com.fasterxml.jackson.core.`jackson-databind`,
+    com.google.code.gson.gson
   ),
   libraryDependencies ++= Seq(
     com.github.alexarchambault.`scalacheck-shapeless_1.14`,

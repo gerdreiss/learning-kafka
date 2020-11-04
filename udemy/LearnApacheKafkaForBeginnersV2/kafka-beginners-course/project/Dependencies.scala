@@ -18,6 +18,15 @@ object Dependencies {
       }
     }
 
+    case object google {
+      case object code {
+        case object gson {
+          val gson =
+            "com.google.code.gson" % "gson" % "2.8.6"
+        }
+      }
+    }
+
     case object olegpy {
       val `better-monadic-for` =
         "com.olegpy" %% "better-monadic-for" % "0.3.1"
