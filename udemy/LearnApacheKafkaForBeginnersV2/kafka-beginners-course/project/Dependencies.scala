@@ -46,9 +46,13 @@ object Dependencies {
       }
     }
 
-    case object kafka {
-      val `kafka-clients` =
-        "org.apache.kafka" % "kafka-clients" % "2.6.0"
+    case object apache {
+      case object kafka {
+        val `kafka-clients` =
+          "org.apache.kafka" % "kafka-clients" % "2.6.0"
+        val `kafka-streams` =
+          "org.apache.kafka" % "kafka-streams" % "2.6.0"
+      }
     }
 
     case object slf4j {
