@@ -32,7 +32,7 @@ object ElasticSearchConsumer {
       new UsernamePasswordCredentials(username, password)
     )
 
-    val httpHost = new HttpHost(hostname, 443, "https")
+    val httpHost                 = new HttpHost(hostname, 443, "https")
     val httpClientConfigCallback =
       new RestClientBuilder.HttpClientConfigCallback {
         override def customizeHttpClient(
@@ -40,7 +40,7 @@ object ElasticSearchConsumer {
           ): HttpAsyncClientBuilder =
           httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider)
       }
-    val restClientBuilder = RestClient
+    val restClientBuilder        = RestClient
       .builder(httpHost)
       .setHttpClientConfigCallback(httpClientConfigCallback)
 
@@ -52,8 +52,8 @@ object ElasticSearchConsumer {
       .map(_.getAsString())
 
   def main(args: Array[String]): Unit = {
-    val client = createClient
-    val consumer = ConsumerDemoGroups.createConsumer
+    val client      = createClient
+    val consumer    = ConsumerDemoGroups.createConsumer
     val bulkRequest = consumer
       .poll(Duration.ofMillis(100))
       .iterator()

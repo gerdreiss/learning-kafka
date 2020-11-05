@@ -14,24 +14,24 @@ import java.time.Duration
 
 object ConsumerDemoGroups {
 
-  val logger = LoggerFactory.getLogger(this.getClass())
-  val bootstrapServer = "127.0.0.1:9092"
+  val logger             = LoggerFactory.getLogger(this.getClass())
+  val bootstrapServer    = "127.0.0.1:9092"
   val stringDeserializer = classOf[StringDeserializer].getName()
-  val groupId = "kafka-demo-elasticsearch"
-  val topic = "twitter_tweets"
+  val groupId            = "kafka-demo-elasticsearch"
+  val topic              = "twitter_tweets"
 
   def createConsumer: KafkaConsumer[String, String] = {
 
     // 1. create consumer config
     val properties =
       Map(
-        BOOTSTRAP_SERVERS_CONFIG -> bootstrapServer,
-        KEY_DESERIALIZER_CLASS_CONFIG -> stringDeserializer,
+        BOOTSTRAP_SERVERS_CONFIG        -> bootstrapServer,
+        KEY_DESERIALIZER_CLASS_CONFIG   -> stringDeserializer,
         VALUE_DESERIALIZER_CLASS_CONFIG -> stringDeserializer,
-        GROUP_ID_CONFIG -> groupId,
-        AUTO_OFFSET_RESET_CONFIG -> "earliest",
-        ENABLE_AUTO_COMMIT_CONFIG -> "false",
-        MAX_POLL_RECORDS_CONFIG -> "100"
+        GROUP_ID_CONFIG                 -> groupId,
+        AUTO_OFFSET_RESET_CONFIG        -> "earliest",
+        ENABLE_AUTO_COMMIT_CONFIG       -> "false",
+        MAX_POLL_RECORDS_CONFIG         -> "100"
       ).toJavaProperties
 
     // 2. create consumer

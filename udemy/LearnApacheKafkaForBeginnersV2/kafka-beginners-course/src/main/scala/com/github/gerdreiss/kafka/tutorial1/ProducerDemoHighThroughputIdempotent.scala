@@ -20,18 +20,18 @@ object ProducerDemoHighThroughputIdempotent extends App {
   // 1. create producer properties
   val properties: ju.Properties =
     Map(
-      BOOTSTRAP_SERVERS_CONFIG -> bootstrapServers,
-      KEY_SERIALIZER_CLASS_CONFIG -> stringSerializer,
-      VALUE_SERIALIZER_CLASS_CONFIG -> stringSerializer,
+      BOOTSTRAP_SERVERS_CONFIG              -> bootstrapServers,
+      KEY_SERIALIZER_CLASS_CONFIG           -> stringSerializer,
+      VALUE_SERIALIZER_CLASS_CONFIG         -> stringSerializer,
       // safe producer
-      ENABLE_IDEMPOTENCE_CONFIG -> "true",
-      ACKS_CONFIG -> "all",
-      RETRIES_CONFIG -> Integer.MAX_VALUE.toString(),
+      ENABLE_IDEMPOTENCE_CONFIG             -> "true",
+      ACKS_CONFIG                           -> "all",
+      RETRIES_CONFIG                        -> Integer.MAX_VALUE.toString(),
       MAX_IN_FLIGHT_REQUESTS_PER_CONNECTION -> "5",
       // high throughput producer at the expense of a bit of latency and CPU usage
-      COMPRESSION_TYPE_CONFIG -> "snappy",
-      LINGER_MS_CONFIG -> "20",
-      BATCH_SIZE_CONFIG -> Integer.toString(32 * 1024) // 32KB
+      COMPRESSION_TYPE_CONFIG               -> "snappy",
+      LINGER_MS_CONFIG                      -> "20",
+      BATCH_SIZE_CONFIG                     -> Integer.toString(32 * 1024) // 32KB
     ).toJavaProperties
 
   // 2. create producer

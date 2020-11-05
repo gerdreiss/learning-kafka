@@ -22,8 +22,8 @@ object ProducerDemo extends App {
   // 1. create producer properties
   val properties: ju.Properties =
     Map(
-      BOOTSTRAP_SERVERS_CONFIG -> bootstrapServers,
-      KEY_SERIALIZER_CLASS_CONFIG -> stringSerializer,
+      BOOTSTRAP_SERVERS_CONFIG      -> bootstrapServers,
+      KEY_SERIALIZER_CLASS_CONFIG   -> stringSerializer,
       VALUE_SERIALIZER_CLASS_CONFIG -> stringSerializer
     ).toJavaProperties
 

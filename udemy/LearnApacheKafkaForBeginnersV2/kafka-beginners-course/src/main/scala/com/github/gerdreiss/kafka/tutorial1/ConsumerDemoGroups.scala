@@ -18,20 +18,20 @@ import java.time.Duration
 
 object ConsumerDemoGroups extends App {
 
-  val logger = LoggerFactory.getLogger(this.getClass())
-  val bootstrapServer = "127.0.0.1:9092"
+  val logger             = LoggerFactory.getLogger(this.getClass())
+  val bootstrapServer    = "127.0.0.1:9092"
   val stringDeserializer = classOf[StringDeserializer].getName()
-  val groupId = "my-first-application"
-  val topic = "first_topic"
+  val groupId            = "my-first-application"
+  val topic              = "first_topic"
 
   // 1. create consumer config
   val properties =
     Map(
-      BOOTSTRAP_SERVERS_CONFIG -> bootstrapServer,
-      KEY_DESERIALIZER_CLASS_CONFIG -> stringDeserializer,
+      BOOTSTRAP_SERVERS_CONFIG        -> bootstrapServer,
+      KEY_DESERIALIZER_CLASS_CONFIG   -> stringDeserializer,
       VALUE_DESERIALIZER_CLASS_CONFIG -> stringDeserializer,
-      GROUP_ID_CONFIG -> groupId,
-      AUTO_OFFSET_RESET_CONFIG -> "earliest"
+      GROUP_ID_CONFIG                 -> groupId,
+      AUTO_OFFSET_RESET_CONFIG        -> "earliest"
     ).toJavaProperties
 
   // 2. create consumer

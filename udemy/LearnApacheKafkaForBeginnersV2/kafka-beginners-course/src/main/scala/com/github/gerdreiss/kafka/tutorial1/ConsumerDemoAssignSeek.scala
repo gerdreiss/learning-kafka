@@ -19,18 +19,18 @@ import org.apache.kafka.common.TopicPartition
 
 object ConsumerDemoAssignSeek extends App {
 
-  val logger = LoggerFactory.getLogger(this.getClass())
-  val bootstrapServer = "127.0.0.1:9092"
+  val logger             = LoggerFactory.getLogger(this.getClass())
+  val bootstrapServer    = "127.0.0.1:9092"
   val stringDeserializer = classOf[StringDeserializer].getName()
-  val topic = "first_topic"
+  val topic              = "first_topic"
 
   // 1. create consumer config
   val properties =
     Map(
-      BOOTSTRAP_SERVERS_CONFIG -> bootstrapServer,
-      KEY_DESERIALIZER_CLASS_CONFIG -> stringDeserializer,
+      BOOTSTRAP_SERVERS_CONFIG        -> bootstrapServer,
+      KEY_DESERIALIZER_CLASS_CONFIG   -> stringDeserializer,
       VALUE_DESERIALIZER_CLASS_CONFIG -> stringDeserializer,
-      AUTO_OFFSET_RESET_CONFIG -> "earliest"
+      AUTO_OFFSET_RESET_CONFIG        -> "earliest"
     ).toJavaProperties
 
   // 2. create consumer
@@ -38,7 +38,7 @@ object ConsumerDemoAssignSeek extends App {
 
   // 3. assign
   val partitionToReadFrom = new TopicPartition(topic, 0)
-  val offsetToReadFrom = 15L
+  val offsetToReadFrom    = 15L
   consumer.assign(ju.Collections.singleton(partitionToReadFrom))
 
   // 3.5 seek
