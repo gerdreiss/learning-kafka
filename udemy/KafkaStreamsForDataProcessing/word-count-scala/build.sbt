@@ -1,4 +1,3 @@
-import Dependencies._
 
 lazy val root = (project in file(".")).settings(
   inThisBuild(
@@ -10,9 +9,9 @@ lazy val root = (project in file(".")).settings(
   ),
   name := "word-count-scala",
   libraryDependencies ++= Seq(
-    "org.scalatest"    %% "scalatest"           % "3.2.3"  % Test,
-    "org.scalacheck"   %% "scalacheck"          % "1.15.1" % Test,
     "org.apache.kafka" %% "kafka-streams-scala" % "2.6.0",
-    "org.slf4j"         % "slf4j-simple"        % "1.7.25"
+    "org.slf4j"         % "slf4j-simple"        % "1.7.25",
+    "org.scalatest"    %% "scalatest"           % "3.2.3"  % Test,
+    "org.scalacheck"   %% "scalacheck"          % "1.15.1" % Test
   )
 )
