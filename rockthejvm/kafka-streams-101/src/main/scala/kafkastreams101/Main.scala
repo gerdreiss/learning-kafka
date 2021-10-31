@@ -21,6 +21,23 @@ object Main extends App:
   // GlobalKTable - copied to all the nodes
   val discountProfilesGTable = builder.globalTable[Profile, Discount](DiscountsTopic)
 
+  // KStream transformation
+  val expensiveOrders = userOrderStream.filter((_, order) => order.amount > 1000)
+
+  val listsOfProducts = userOrderStream.mapValues(_.products)
+
+  val productsStream = userOrderStream.flatMapValues(_.products)
+
+  // join
+  val ordersWithUserProfiles = userOrderStream.join(userProfileTable)((order, profile) => (order, profile))
+
+  val discountedOrdersStream = ordersWithUserProfiles.join(discountProfilesGTable)(
+    { case (user, (order, profile)) => profile },
+    { case ((order, profile), discount) => order.copy(amount = order.amount - discount) },
+  )
+
+  builder.build
+
   println("─" * 100)
   println("hello world")
   println("─" * 100)
