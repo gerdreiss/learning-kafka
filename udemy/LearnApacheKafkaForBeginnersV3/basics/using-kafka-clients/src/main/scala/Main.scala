@@ -1,1 +1,3 @@
-@main def HelloKafka(): Unit = println("Hello Kafka Clients!")
+object UsingKafkaClients extends App:
+
+  println("Hello Kafka Clients!")
