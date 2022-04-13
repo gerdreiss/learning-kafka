@@ -23,20 +23,19 @@ object SimpleProducerWithCallback extends App:
   val record =
     new ProducerRecord[String, String]("demo-topic", "hello, kafka-clients with callback!")
 
+  val callback: Callback = new Callback:
+    override def onCompletion(metadata: RecordMetadata, error: Exception | Null): Unit =
+      // executes every time a record is successfully sent or an exception is thrown
+      if error == null then logger.info(s"""Received new metadata:
+                                           |Topic: ${metadata.topic}
+                                           |Partition: ${metadata.partition}
+                                           |Offset: ${metadata.offset}
+                                           |Timestamp: ${metadata.timestamp}
+                                           |""".stripMargin)
+      else logger.error(s"Something bad happened: ${error.getMessage}")
+
   // send the record - asynchronous
-  producer.send(
-    record,
-    new Callback:
-      override def onCompletion(metadata: RecordMetadata, error: Exception | Null): Unit =
-        // executes every time a record is successfully sent or an exception is thrown
-        if error == null then logger.info(s"""Received new metadata:
-                                             |Topic: ${metadata.topic}
-                                             |Partition: ${metadata.partition}
-                                             |Offset: ${metadata.offset}
-                                             |Timestamp: ${metadata.timestamp}
-                                             |""".stripMargin)
-        else logger.error(s"Something bad happened: ${error.getMessage}")
-  )
+  producer.send(record, callback)
 
   // flush and close the producer - synchronous
   producer.flush()
