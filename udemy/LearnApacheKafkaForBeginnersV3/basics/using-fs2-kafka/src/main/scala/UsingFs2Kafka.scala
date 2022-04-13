@@ -11,6 +11,4 @@ object UsingFs2Kafka extends IOApp.Simple:
     ProducerRecord("demo-topic", "fs2", "hello, fs2-kafka!")
 
   override def run: IO[Unit] =
-    KafkaProducer.resource(settings).use { producer =>
-      producer.produceOne(record).void
-    }
+    KafkaProducer.resource(settings).use(_.produceOne(record).void)
