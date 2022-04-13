@@ -5,10 +5,10 @@ import org.slf4j.LoggerFactory
 import scala.collection.immutable.{HashMap, StringOps}
 import scala.jdk.CollectionConverters.*
 
-object UsingKafkaClients extends App:
+object SimpleProducer extends App:
 
   val logger = LoggerFactory.getLogger(getClass).nn
-  
+
   logger.info("Starting UsingKafkaClients")
 
   // create Producer Properties

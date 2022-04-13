@@ -1,7 +1,7 @@
 import cats.effect.*
 import fs2.kafka.*
 
-object UsingFs2Kafka extends IOApp.Simple:
+object Fs2ProducerResource extends IOApp.Simple:
 
   val settings: ProducerSettings[IO, String, String] =
     ProducerSettings[IO, String, String]
