@@ -8,7 +8,7 @@ Compile / run / fork := true
 Global / onChangedBuildSource := ReloadOnSourceChanges
 Global / semanticdbEnabled    := true // for metals
 
-lazy val root = project
+lazy val `kafka-basics` = project
   .in(file("."))
   .aggregate(`using-kafka-clients`, `using-fs2-kafka`, `using-zio-kafka`)
 

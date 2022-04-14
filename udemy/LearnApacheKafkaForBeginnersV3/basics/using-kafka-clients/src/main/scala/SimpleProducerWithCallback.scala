@@ -20,8 +20,12 @@ object SimpleProducerWithCallback extends App:
   val producer = new KafkaProducer[String, String](properties.asJava)
 
   // create a Producer Record
-  val record =
-    new ProducerRecord[String, String]("demo-topic", "hello, kafka-clients with callback!")
+  def record(id: Any) =
+    new ProducerRecord[String, String](
+      "demo-topic",
+      s"Key_$id",
+      s"$id) hello, kafka-clients with callback!"
+    )
 
   val callback: Callback = new Callback:
     override def onCompletion(metadata: RecordMetadata, error: Exception | Null): Unit =
@@ -35,7 +39,7 @@ object SimpleProducerWithCallback extends App:
       else logger.error(s"Something bad happened: ${error.getMessage}")
 
   // send the record - asynchronous
-  producer.send(record, callback)
+  (1 to 10).foreach(i => producer.send(record(i), callback))
 
   // flush and close the producer - synchronous
   producer.flush()
