@@ -46,8 +46,8 @@ val commonSettings = Seq(
   scalacOptions ++= Seq(
     "-source:future",
     // "-language:implicitConversions", // do we need this???
-    "-Yexplicit-nulls", // experimental (might cause issues with circe)
-    "-Ysafe-init",      // experimental (might cause issues with circe)
+    // "-Yexplicit-nulls", // experimental (might cause issues with circe)
+    // "-Ysafe-init",      // experimental (might cause issues with circe)
     "-deprecation",     // emit warning and location for usages of deprecated APIs
     "-explain",         // explain errors in more detail
     "-explain-types",   // explain type errors in more detail
