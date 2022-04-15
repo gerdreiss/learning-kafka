@@ -3,10 +3,10 @@ import zio.*
 import zio.kafka.producer.*
 import zio.kafka.serde.*
 
-object SimpleZioProducer extends ZIOAppDefault:
+object ZioOneRecordProducer extends ZIOAppDefault:
 
-  val producer: ZIO[Scope, Throwable, Producer] =
-    Producer.make(ProducerSettings(List("localhost:9092")))
+  val producerLayer: TaskLayer[Producer] =
+    ZLayer.scoped(Producer.make(ProducerSettings(List("localhost:9092"))))
 
   val record: ProducerRecord[String, String] =
     ProducerRecord("demo-topic", "zio", "hello, zio-kafka")
@@ -14,4 +14,4 @@ object SimpleZioProducer extends ZIOAppDefault:
   override def run: Task[Any] =
     Producer
       .produce(record, Serde.string, Serde.string)
-      .provideLayer(ZLayer.scoped(producer))
+      .provideLayer(producerLayer)
