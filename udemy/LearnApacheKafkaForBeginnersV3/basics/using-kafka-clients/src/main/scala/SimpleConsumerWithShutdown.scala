@@ -37,10 +37,10 @@ object SimpleConsumerWithShutdown extends App:
         .nn
         .asScala
         .map(record => s"""
-                          |key: ${record.key()}
-                          |value: ${record.value()}
-                          |partition: ${record.partition()}
-                          |offset: ${record.offset()}
-                          |""".stripMargin)
+             |key: ${record.key()}
+             |value: ${record.value()}
+             |partition: ${record.partition()}
+             |offset: ${record.offset()}
+             |""".stripMargin)
         .foreach(println)
   }
