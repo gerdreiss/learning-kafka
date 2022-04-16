@@ -1,3 +1,3 @@
 object WikimediaChangesProducer extends App:
 
-  println("Hello, Wikimedia!")
+  println("Hello, Kafka Clients!")

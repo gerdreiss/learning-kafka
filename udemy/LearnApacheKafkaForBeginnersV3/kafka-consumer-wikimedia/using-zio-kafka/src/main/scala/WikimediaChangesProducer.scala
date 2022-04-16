@@ -1,7 +1,6 @@
 import zio.*
 
-import java.io.IOException
-
 object WikimediaChangesProducer extends ZIOAppDefault:
 
-  def run = Console.printLine("Hello, ZIO Kafka!")
+  def run: ZIO[Environment, Throwable, Unit] =
+    Console.printLine("Hello, ZIO Kafka!")
