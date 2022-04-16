@@ -2,7 +2,10 @@ import com.launchdarkly.eventsource.{ EventHandler, MessageEvent }
 import org.apache.kafka.clients.producer.{ KafkaProducer, ProducerRecord }
 import org.slf4j.LoggerFactory
 
-class WikimediaChangeHandler(private val producer: KafkaProducer[String, String], private val topic: String) extends EventHandler:
+class WikimediaChangeHandler(
+    private val producer: KafkaProducer[String, String],
+    private val topic: String
+) extends EventHandler:
 
   private val logger = LoggerFactory.getLogger(getClass)
 
