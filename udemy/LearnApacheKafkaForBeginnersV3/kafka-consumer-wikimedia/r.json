@@ -1,0 +1,27 @@
+{
+  "$schema": "/mediawiki/recentchange/1.0.0",
+  "meta": {
+    "uri": "https://commons.wikimedia.org/wiki/Category:Romanian_FOP_cases/deleted",
+    "request_id": "7d85eb24-7b6f-4ade-b43a-b1744bd26847",
+    "id": "32d15a16-5782-425a-8444-2978097eba9f",
+    "dt": "2022-04-17T06:32:10Z",
+    "domain": "commons.wikimedia.org",
+    "stream": "mediawiki.recentchange",
+    "topic": "eqiad.mediawiki.recentchange",
+    "partition": 0,
+    "offset": 3796447436
+  },
+  "id": 1906191561,
+  "type": "categorize",
+  "namespace": 14,
+  "title": "Category:Romanian FOP cases/deleted",
+  "comment": "[[:Commons:Deletion requests/File:RO B Union Square Unirea Shopping Center.jpg]] added to category, [[Special:WhatLinksHere/Commons:Deletion requests/File:RO B Union Square Unirea Shopping Center.jpg|this page is included within other pages]]",
+  "timestamp": 1650177130,
+  "user": "JWilz12345",
+  "bot": false,
+  "server_url": "https://commons.wikimedia.org",
+  "server_name": "commons.wikimedia.org",
+  "server_script_path": "/w",
+  "wiki": "commonswiki",
+  "parsedcomment": "<a href=\"/wiki/Commons:Deletion_requests/File:RO_B_Union_Square_Unirea_Shopping_Center.jpg\" title=\"Commons:Deletion requests/File:RO B Union Square Unirea Shopping Center.jpg\">Commons:Deletion requests/File:RO B Union Square Unirea Shopping Center.jpg</a> added to category, <a href=\"/wiki/Special:WhatLinksHere/Commons:Deletion_requests/File:RO_B_Union_Square_Unirea_Shopping_Center.jpg\" title=\"Special:WhatLinksHere/Commons:Deletion requests/File:RO B Union Square Unirea Shopping Center.jpg\">this page is included within other pages</a>"
+}

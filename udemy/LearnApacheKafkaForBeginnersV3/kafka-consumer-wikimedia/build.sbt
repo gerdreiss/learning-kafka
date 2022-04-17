@@ -25,9 +25,12 @@ lazy val `using-fs2-kafka` = project
   .settings(
     resolvers += "Confluent IO" at "https://packages.confluent.io/maven/",
     libraryDependencies ++= Seq(
-      "com.github.fd4s" %% "fs2-kafka"        % "3.0.0-M7",
-      "com.github.fd4s" %% "fs2-kafka-vulcan" % "3.0.0-M7",
-      "org.typelevel"   %% "cats-effect"      % "3.3.11"
+      "org.http4s"      %% "http4s-ember-client" % "1.0.0-M23",
+      "org.http4s"      %% "http4s-circe"        % "1.0.0-M23",
+      "io.circe"        %% "circe-generic"       % "0.15.0-M1",
+      "com.github.fd4s" %% "fs2-kafka"           % "3.0.0-M7",
+      "com.github.fd4s" %% "fs2-kafka-vulcan"    % "3.0.0-M7",
+      "org.typelevel"   %% "cats-effect"         % "3.3.11"
     )
   )
 
