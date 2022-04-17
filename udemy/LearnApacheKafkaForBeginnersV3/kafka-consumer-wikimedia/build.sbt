@@ -38,7 +38,10 @@ lazy val `using-zio-kafka` = project
   .in(file("using-zio-kafka"))
   .settings(commonSettings)
   .settings(
-    libraryDependencies += "dev.zio" %% "zio-kafka" % "2.0.0-M2"
+    libraryDependencies ++= Seq(
+      "dev.zio" %% "zio-kafka" % "2.0.0-M3"
+      // "com.softwaremill.sttp.client3" %% "httpclient-backend-zio" % "3.5.2"
+    )
   )
 
 val commonSettings = Seq(

@@ -25,7 +25,7 @@ object WikimediaChangesProducer extends IOApp:
       .resource(EmberClientBuilder.default[IO].build)
       .flatMap {
         _.stream(Request[IO](uri = uri"https://stream.wikimedia.org/v2/stream/recentchange"))
-          .flatMap(_.body.chunks.parseJson(AsyncParser.ValueStream))
+          .flatMap(_.body.chunks.parseJsonStream)
       }
       .map(_.spaces2)
       .through(lines)
