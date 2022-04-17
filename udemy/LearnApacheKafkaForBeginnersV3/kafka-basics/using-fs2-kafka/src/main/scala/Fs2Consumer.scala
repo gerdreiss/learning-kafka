@@ -11,7 +11,7 @@ object Fs2Consumer extends IOApp.Simple:
       .withBootstrapServers("localhost:9092")
       .withGroupId("fs2-group")
 
-  // FIXME: this shit fails with:
+  // FIXME: this one fails with:
   //  java.lang.NullPointerException: Cannot read the array length because "bytes" is null
   override def run: IO[Unit] =
     KafkaConsumer
