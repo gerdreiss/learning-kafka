@@ -39,8 +39,8 @@ lazy val `using-zio-kafka` = project
   .settings(commonSettings)
   .settings(
     libraryDependencies ++= Seq(
-      "com.softwaremill.sttp.client3" %% "httpclient-backend-zio" % "3.5.2"
-      // "dev.zio"                       %% "zio-kafka"              % "2.0.0-M3"
+      "com.softwaremill.sttp.client3" %% "async-http-client-backend-zio" % "3.5.2",
+      "dev.zio"                       %% "zio-kafka"                     % "2.0.0-M3"
     )
   )
 
