@@ -10,7 +10,14 @@ object WikimediaChangesProducer extends App:
   val properties = Map(
     ProducerConfig.BOOTSTRAP_SERVERS_CONFIG      -> "localhost:9092",
     ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG   -> "org.apache.kafka.common.serialization.StringSerializer",
-    ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG -> "org.apache.kafka.common.serialization.StringSerializer"
+    ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG -> "org.apache.kafka.common.serialization.StringSerializer",
+
+    // safe producer config for Kafka <= 2.8
+    ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG             -> "true",
+    ProducerConfig.ACKS_CONFIG                           -> "all",
+    ProducerConfig.RETRIES_CONFIG                        -> Integer.MAX_VALUE.toString,
+    ProducerConfig.MAX_IN_FLIGHT_REQUESTS_PER_CONNECTION -> "5",
+    ProducerConfig.DELIVERY_TIMEOUT_MS_CONFIG            -> "120000"
   )
 
   val producer     = new KafkaProducer[String, String](properties.asJava)

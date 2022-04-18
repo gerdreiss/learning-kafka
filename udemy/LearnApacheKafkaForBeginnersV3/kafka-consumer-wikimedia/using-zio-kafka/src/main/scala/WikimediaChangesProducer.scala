@@ -43,9 +43,8 @@ object WikimediaChangesProducer extends ZIOAppDefault:
       _.send(request)
         .map(_.body)
         .map {
-          case Left(error) =>
+          case Left(error)   =>
             ZStream.fail(new Exception(error))
-
           case Right(stream) =>
             stream.chunks.map(mkProducerRecords)
         }
@@ -59,10 +58,8 @@ object WikimediaChangesProducer extends ZIOAppDefault:
                    .runDrain
     yield ()
 
+  val armeriaLayer  = ArmeriaZioBackend.layer()
+  val producerLayer = ZLayer.scoped(Producer.make(ProducerSettings(List("localhost:9092"))))
+
   override def run =
-    program
-      .provideLayer(
-        ArmeriaZioBackend.layer() ++ ZLayer.scoped(
-          Producer.make(ProducerSettings(List("localhost:9092")))
-        )
-      )
+    program.provideLayer(armeriaLayer ++ producerLayer)
