@@ -27,8 +27,16 @@ object WikimediaChangesProducer extends ZIOAppDefault:
       .get(uri"https://stream.wikimedia.org/v2/stream/recentchange")
       .response(asStreamUnsafe(ZioStreams))
 
-  val producerLayer: TaskLayer[Producer] =
-    ZLayer.scoped(Producer.make(ProducerSettings(List("localhost:9092"))))
+  def mkProducerRecords(chunk: Chunk[Byte]): Chunk[ProducerRecord[String, String]] =
+    Chunk.fromIterable(
+      new String(chunk.toArray).linesIterator
+        .filter(_.startsWith("data: "))
+        .map(_.drop(6))
+        .map(ProducerRecord(topic, mkKey, _))
+        .toArray
+    )
+
+  def mkKey = keyprefix + util.Random.nextInt(partitions)
 
   val recentChanges: Task[Stream[Throwable, Chunk[ProducerRecord[String, String]]]] =
     ArmeriaZioBackend.usingDefaultClient().flatMap {
@@ -39,15 +47,7 @@ object WikimediaChangesProducer extends ZIOAppDefault:
             ZStream.fail(new Exception(error))
 
           case Right(stream) =>
-            stream.chunks
-              .map(chunk =>
-                new String(chunk.toArray).linesIterator
-                  .filter(_.startsWith("data: "))
-                  .map(_.drop(6))
-                  .map(ProducerRecord(topic, keyprefix + util.Random.nextInt(partitions), _))
-                  .toArray
-              )
-              .map(Chunk.apply)
+            stream.chunks.map(mkProducerRecords)
         }
     }
 
@@ -61,4 +61,8 @@ object WikimediaChangesProducer extends ZIOAppDefault:
 
   override def run =
     program
-      .provideLayer(ArmeriaZioBackend.layer() ++ producerLayer)
+      .provideLayer(
+        ArmeriaZioBackend.layer() ++ ZLayer.scoped(
+          Producer.make(ProducerSettings(List("localhost:9092")))
+        )
+      )
