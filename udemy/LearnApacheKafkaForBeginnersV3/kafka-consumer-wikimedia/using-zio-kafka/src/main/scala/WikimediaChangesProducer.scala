@@ -1,7 +1,8 @@
 import org.apache.kafka.clients.producer.ProducerRecord
+import org.apache.kafka.clients.producer.RecordMetadata
 import sttp.capabilities.zio.ZioStreams
 import sttp.client3.*
-import sttp.client3.asynchttpclient.zio.AsyncHttpClientZioBackend
+import sttp.client3.armeria.zio.ArmeriaZioBackend
 import zio.*
 import zio.kafka.producer.*
 import zio.kafka.serde.*
@@ -21,7 +22,7 @@ object WikimediaChangesProducer extends ZIOAppDefault:
   // number of configured partitions for the topic
   val partitions = 3
 
-  val request =
+  val request: Request[Either[String, ZioStreams.BinaryStream], ZioStreams] =
     basicRequest
       .get(uri"https://stream.wikimedia.org/v2/stream/recentchange")
       .response(asStreamUnsafe(ZioStreams))
@@ -29,13 +30,13 @@ object WikimediaChangesProducer extends ZIOAppDefault:
   val producerLayer: TaskLayer[Producer] =
     ZLayer.scoped(Producer.make(ProducerSettings(List("localhost:9092"))))
 
-  val streamRecentChanges =
-    AsyncHttpClientZioBackend().flatMap {
+  val recentChanges: Task[Stream[Throwable, Chunk[ProducerRecord[String, String]]]] =
+    ArmeriaZioBackend.usingDefaultClient().flatMap {
       _.send(request)
         .map(_.body)
         .map {
           case Left(error) =>
-            ZStream.fail(error)
+            ZStream.fail(new Exception(error))
 
           case Right(stream) =>
             stream.chunks
@@ -50,7 +51,14 @@ object WikimediaChangesProducer extends ZIOAppDefault:
         }
     }
 
+  val program: ZIO[Producer, Throwable, Unit] =
+    for
+      changes <- recentChanges
+      _       <- changes
+                   .map(chunk => Producer.produceChunk(chunk, Serde.string, Serde.string))
+                   .runDrain
+    yield ()
+
   override def run =
-    streamRecentChanges
-      .map(_.mapConcatZIO(chunk => Producer.produceChunk(chunk, Serde.string, Serde.string)))
-      .provideLayer(AsyncHttpClientZioBackend.layer() ++ producerLayer)
+    program
+      .provideLayer(ArmeriaZioBackend.layer() ++ producerLayer)
