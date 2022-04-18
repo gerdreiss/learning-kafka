@@ -1,3 +1,4 @@
+import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.apache.kafka.clients.producer.RecordMetadata
 import sttp.capabilities.zio.ZioStreams
@@ -58,8 +59,19 @@ object WikimediaChangesProducer extends ZIOAppDefault:
                    .runDrain
     yield ()
 
-  val armeriaLayer  = ArmeriaZioBackend.layer()
-  val producerLayer = ZLayer.scoped(Producer.make(ProducerSettings(List("localhost:9092"))))
+  val armeriaLayer = ArmeriaZioBackend.layer()
+
+  // safe producer config for Kafka <= 2.8
+  val safeProducerProperties = Map(
+    ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG             -> "true",
+    ProducerConfig.ACKS_CONFIG                           -> "all",
+    ProducerConfig.RETRIES_CONFIG                        -> Integer.MAX_VALUE.toString,
+    ProducerConfig.MAX_IN_FLIGHT_REQUESTS_PER_CONNECTION -> "5",
+    ProducerConfig.DELIVERY_TIMEOUT_MS_CONFIG            -> "120000"
+  )
+  val producerLayer          = ZLayer.scoped(
+    Producer.make(ProducerSettings(List("localhost:9092")).withProperties(safeProducerProperties))
+  )
 
   override def run =
     program.provideLayer(armeriaLayer ++ producerLayer)

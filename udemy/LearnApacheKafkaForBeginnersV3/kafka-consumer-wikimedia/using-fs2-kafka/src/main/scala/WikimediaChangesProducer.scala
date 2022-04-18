@@ -1,14 +1,15 @@
-import cats.implicits.*
 import cats.effect.*
+import cats.implicits.*
 import fs2.*
 import fs2.kafka.*
+import org.apache.kafka.clients.producer.ProducerConfig
 import org.http4s.Request
 import org.http4s.ember.client.EmberClientBuilder
 import org.http4s.syntax.literals.uri
 
 import scala.jdk.CollectionConverters.*
-import cats.data.Ior
 import scala.util.Random
+import scala.concurrent.duration.*
 
 object WikimediaChangesProducer extends IOApp:
 
@@ -23,7 +24,14 @@ object WikimediaChangesProducer extends IOApp:
   // the record key prefix
   val keyprefix       = "fs2-producer-key-"
 
-  val producerSettings = ProducerSettings[IO, String, String].withBootstrapServers("localhost:9092")
+  val producerSettings = ProducerSettings[IO, String, String]
+    .withBootstrapServers("localhost:9092")
+    // safe producer config for Kafka <= 2.8
+    .withAcks(Acks.All)
+    .withRetries(Int.MaxValue)
+    .withEnableIdempotence(true)
+    .withMaxInFlightRequestsPerConnection(5)
+    .withDeliveryTimeout(2.minutes)
 
   val recentChangesStream =
     for
