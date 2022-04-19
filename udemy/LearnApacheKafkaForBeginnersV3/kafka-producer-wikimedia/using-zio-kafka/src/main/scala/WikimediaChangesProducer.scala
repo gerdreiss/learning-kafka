@@ -18,7 +18,7 @@ import zio.stream.Stream
 object WikimediaChangesProducer extends ZIOAppDefault:
 
   // the topic name
-  val topic      = "wikipedia-recent-changes"
+  val topic      = "wikimedia-recent-changes"
   // the record key prefix
   val keyprefix  = "zio-producer-key-"
   // number of configured partitions for the topic

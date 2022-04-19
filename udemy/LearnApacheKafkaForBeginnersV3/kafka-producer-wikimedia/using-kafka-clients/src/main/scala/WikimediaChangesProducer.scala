@@ -27,7 +27,7 @@ object WikimediaChangesProducer extends App:
   )
 
   val producer     = new KafkaProducer[String, String](properties.asJava)
-  val topic        = "wikipedia-recent-changes"
+  val topic        = "wikimedia-recent-changes"
   val eventHandler = new WikimediaChangeHandler(producer, topic)
   val url          = new URI("https://stream.wikimedia.org/v2/stream/recentchange")
 

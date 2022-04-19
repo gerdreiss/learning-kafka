@@ -18,7 +18,7 @@ object WikimediaChangesProducer extends IOApp:
   // the stream URL
   val recentchangeUrl = uri"https://stream.wikimedia.org/v2/stream/recentchange"
   // the topic name
-  val topic           = "wikipedia-recent-changes"
+  val topic           = "wikimedia-recent-changes"
   // the record key prefix
   val keyprefix       = "fs2-producer-key-"
 

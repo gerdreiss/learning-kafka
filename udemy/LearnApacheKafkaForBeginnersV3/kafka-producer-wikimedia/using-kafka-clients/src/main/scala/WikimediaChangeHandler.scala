@@ -17,7 +17,7 @@ class WikimediaChangeHandler(
     logger.info("Disconnected from Wikimedia change stream")
 
   override def onMessage(event: String, messageEvent: MessageEvent): Unit =
-    logger.info(s"Received message: ${messageEvent.getData}")
+    // logger.info(s"Received message: ${messageEvent.getData}")
     producer.send(new ProducerRecord[String, String](topic, event, messageEvent.getData))
 
   override def onComment(comment: String): Unit =
