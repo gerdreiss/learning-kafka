@@ -31,6 +31,6 @@ object WikimediaChangesProducer extends App:
   val eventHandler = new WikimediaChangeHandler(producer, topic)
   val url          = new URI("https://stream.wikimedia.org/v2/stream/recentchange")
 
-  new EventSource.Builder(eventHandler, url).build().start()
+  new EventSource.Builder(eventHandler, url).nn.build().nn.start()
 
   TimeUnit.MINUTES.sleep(10)

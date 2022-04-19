@@ -10,10 +10,10 @@ lazy val `using-kafka-clients` = project
   .settings(commonSettings)
   .settings(
     libraryDependencies ++= Seq(
+      "org.opensearch.client" % "opensearch-rest-high-level-client" % "1.3.1",
+      "com.google.code.gson"  % "gson"                              % "2.9.0",
       "org.apache.kafka"      % "kafka-clients"                     % "3.1.0",
-      "org.slf4j"             % "slf4j-api"                         % "1.7.36",
-      "org.slf4j"             % "slf4j-simple"                      % "1.7.36",
-      "org.opensearch.client" % "opensearch-rest-high-level-client" % "1.3.1"
+      "org.slf4j"             % "slf4j-simple"                      % "1.7.36"
     )
   )
 
@@ -23,10 +23,8 @@ lazy val `using-fs2-kafka` = project
   .settings(
     resolvers += "Confluent IO" at "https://packages.confluent.io/maven/",
     libraryDependencies ++= Seq(
-      "com.github.fd4s"     %% "fs2-kafka"        % "3.0.0-M7",
-      "com.github.fd4s"     %% "fs2-kafka-vulcan" % "3.0.0-M7",
-      "org.typelevel"       %% "cats-effect"      % "3.3.11",
-      "com.google.code.gson" % "gson"             % "2.9.0"
+      "com.github.fd4s" %% "fs2-kafka"   % "3.0.0-M7",
+      "org.typelevel"   %% "cats-effect" % "3.3.11"
     )
   )
 
@@ -42,9 +40,8 @@ lazy val `using-zio-kafka` = project
 val commonSettings = Seq(
   scalacOptions ++= Seq(
     "-source:future",
-    // "-language:implicitConversions", // do we need this???
-    // "-Yexplicit-nulls", // experimental (might cause issues with circe)
-    // "-Ysafe-init", // experimental (might cause issues with circe)
+    "-Yexplicit-nulls", // experimental (might cause issues with circe)
+    "-Ysafe-init",      // experimental (might cause issues with circe)
     "-deprecation",     // emit warning and location for usages of deprecated APIs
     "-explain",         // explain errors in more detail
     "-explain-types",   // explain type errors in more detail

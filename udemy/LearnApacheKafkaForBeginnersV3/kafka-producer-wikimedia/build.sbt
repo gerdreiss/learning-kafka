@@ -10,11 +10,9 @@ lazy val `using-kafka-clients` = project
   .settings(commonSettings)
   .settings(
     libraryDependencies ++= Seq(
-      "org.apache.kafka"     % "kafka-clients"      % "3.1.0",
-      "org.slf4j"            % "slf4j-api"          % "1.7.36",
-      "org.slf4j"            % "slf4j-simple"       % "1.7.36",
-      "com.squareup.okhttp3" % "okhttp"             % "4.9.3",
-      "com.launchdarkly"     % "okhttp-eventsource" % "2.5.0"
+      "org.apache.kafka" % "kafka-clients"      % "3.1.0",
+      "com.launchdarkly" % "okhttp-eventsource" % "2.5.0",
+      "org.slf4j"        % "slf4j-simple"       % "1.7.36"
     )
   )
 
@@ -25,10 +23,7 @@ lazy val `using-fs2-kafka` = project
     resolvers += "Confluent IO" at "https://packages.confluent.io/maven/",
     libraryDependencies ++= Seq(
       "org.http4s"      %% "http4s-ember-client" % "1.0.0-M23",
-      "org.http4s"      %% "http4s-circe"        % "1.0.0-M23",
-      "io.circe"        %% "circe-generic"       % "0.15.0-M1",
       "com.github.fd4s" %% "fs2-kafka"           % "3.0.0-M7",
-      "com.github.fd4s" %% "fs2-kafka-vulcan"    % "3.0.0-M7",
       "org.typelevel"   %% "cats-effect"         % "3.3.11"
     )
   )
@@ -46,19 +41,18 @@ lazy val `using-zio-kafka` = project
 val commonSettings = Seq(
   scalacOptions ++= Seq(
     "-source:future",
-    // "-language:implicitConversions", // do we need this???
-    // "-Yexplicit-nulls", // experimental (might cause issues with circe)
-    // "-Ysafe-init", // experimental (might cause issues with circe)
-    "-deprecation",     // emit warning and location for usages of deprecated APIs
-    "-explain",         // explain errors in more detail
-    "-explain-types",   // explain type errors in more detail
-    "-feature",         // emit warning and location for usages of features that should be imported explicitly
-    "-indent",          // allow significant indentation.
-    "-new-syntax",      // require `then` and `do` in control expressions.
-    "-print-lines",     // show source code line numbers.
-    "-unchecked",       // enable additional warnings where generated code depends on assumptions
-    "-Ykind-projector", // allow `*` as wildcard to be compatible with kind projector
-    "-Xfatal-warnings", // fail the compilation if there are any warnings
-    "-Xmigration"       // warn about constructs whose behavior may have changed since version
+    "-Yexplicit-nulls",              // experimental (might cause issues with circe)
+    "-Ysafe-init",                   // experimental (might cause issues with circe)
+    "-deprecation",                  // emit warning and location for usages of deprecated APIs
+    "-explain",                      // explain errors in more detail
+    "-explain-types",                // explain type errors in more detail
+    "-feature",                      // emit warning and location for usages of features that should be imported explicitly
+    "-indent",                       // allow significant indentation.
+    "-new-syntax",                   // require `then` and `do` in control expressions.
+    "-print-lines",                  // show source code line numbers.
+    "-unchecked",                    // enable additional warnings where generated code depends on assumptions
+    "-Ykind-projector",              // allow `*` as wildcard to be compatible with kind projector
+    "-Xfatal-warnings",              // fail the compilation if there are any warnings
+    "-Xmigration"                    // warn about constructs whose behavior may have changed since version
   )
 )

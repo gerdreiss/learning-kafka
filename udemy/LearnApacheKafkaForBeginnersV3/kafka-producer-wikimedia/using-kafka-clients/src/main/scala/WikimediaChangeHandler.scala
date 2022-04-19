@@ -7,7 +7,7 @@ class WikimediaChangeHandler(
     private val topic: String
 ) extends EventHandler:
 
-  private val logger = LoggerFactory.getLogger(getClass)
+  private val logger = LoggerFactory.getLogger(getClass).nn
 
   override def onOpen(): Unit =
     logger.info("Connected to Wikimedia change stream")
