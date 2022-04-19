@@ -23,21 +23,20 @@ object WikimediaChangesProducer extends ZIOAppDefault:
   // number of configured partitions for the topic
   val partitions = 3
 
-  val request: Request[Either[String, ZioStreams.BinaryStream], ZioStreams] =
-    basicRequest
-      .get(uri"https://stream.wikimedia.org/v2/stream/recentchange")
-      .response(asStreamUnsafe(ZioStreams))
+  def mkKey = keyprefix + util.Random.nextInt(partitions)
 
   def mkProducerRecords(chunk: Chunk[Byte]): Chunk[ProducerRecord[String, String]] =
     Chunk.fromIterable(
       new String(chunk.toArray).linesIterator
         .filter(_.startsWith("data: "))
-        .map(_.drop(6))
-        .map(ProducerRecord(topic, mkKey, _))
+        .map(chunk => ProducerRecord(topic, mkKey, chunk.drop(6)))
         .toArray
     )
 
-  def mkKey = keyprefix + util.Random.nextInt(partitions)
+  val request: Request[Either[String, ZioStreams.BinaryStream], ZioStreams] =
+    basicRequest
+      .get(uri"https://stream.wikimedia.org/v2/stream/recentchange")
+      .response(asStreamUnsafe(ZioStreams))
 
   val recentChanges: Task[Stream[Throwable, Chunk[ProducerRecord[String, String]]]] =
     ArmeriaZioBackend.usingDefaultClient().flatMap {
@@ -82,4 +81,4 @@ object WikimediaChangesProducer extends ZIOAppDefault:
     )
 
   override def run =
-    program.provideLayer(armeriaLayer ++ producerLayer)
+    program.exitCode.provideLayer(armeriaLayer ++ producerLayer)

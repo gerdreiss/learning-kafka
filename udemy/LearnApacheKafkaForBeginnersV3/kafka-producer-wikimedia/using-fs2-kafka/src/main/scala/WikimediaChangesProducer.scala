@@ -41,13 +41,15 @@ object WikimediaChangesProducer extends IOApp:
     for
       resource <- Stream.resource(EmberClientBuilder.default[IO].build)
       stream   <- resource.stream(Request[IO](uri = recentchangeUrl))
-      records  <- stream.body.chunks
-                    .map(chunk => new String(chunk.toArray))
-                    .filter(_.startsWith("data: "))
-                    .map(_.drop(6))
-                    .map(ProducerRecord(topic, keyprefix + Random.nextInt(partitions), _))
-                    .sliding(recordGroupSize, recordGroupSize)
-                    .map(ProducerRecords.apply)
+      records  <-
+        stream.body.chunks
+          .map(chunk => new String(chunk.toArray))
+          .filter(_.startsWith("data: "))
+          .map(chunk =>
+            ProducerRecord(topic, keyprefix + Random.nextInt(partitions), chunk.drop(6))
+          )
+          .sliding(recordGroupSize, recordGroupSize)
+          .map(ProducerRecords.apply)
     yield records
 
   def run(args: List[String]): IO[ExitCode] =
