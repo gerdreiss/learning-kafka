@@ -1,16 +1,17 @@
 import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.clients.producer.ProducerRecord
-import org.apache.kafka.clients.producer.RecordMetadata
 import sttp.capabilities.zio.ZioStreams
 import sttp.client3.*
 import sttp.client3.armeria.zio.ArmeriaZioBackend
-import zio.*
-import zio.kafka.producer.*
-import zio.kafka.serde.*
-import zio.stream.*
-
-import scala.concurrent.duration.Duration
-import scala.jdk.CollectionConverters.*
+import zio.Chunk
+import zio.Task
+import zio.ZIO
+import zio.ZIOAppDefault
+import zio.ZLayer
+import zio.kafka.producer.Producer
+import zio.kafka.producer.ProducerSettings
+import zio.kafka.serde.Serde
+import zio.stream.Stream
 
 // FIXME: does not work yet - something's missing...
 
@@ -44,7 +45,7 @@ object WikimediaChangesProducer extends ZIOAppDefault:
         .map(_.body)
         .map {
           case Left(error)   =>
-            ZStream.fail(new Exception(error))
+            Stream.fail(new Exception(error))
           case Right(stream) =>
             stream.chunks.map(mkProducerRecords)
         }

@@ -1,5 +1,6 @@
-import com.launchdarkly.eventsource.{ EventHandler, EventSource, MessageEvent }
-import org.apache.kafka.clients.producer.{ KafkaProducer, ProducerConfig }
+import com.launchdarkly.eventsource.EventSource
+import org.apache.kafka.clients.producer.KafkaProducer
+import org.apache.kafka.clients.producer.ProducerConfig
 
 import java.net.URI
 import java.util.concurrent.TimeUnit

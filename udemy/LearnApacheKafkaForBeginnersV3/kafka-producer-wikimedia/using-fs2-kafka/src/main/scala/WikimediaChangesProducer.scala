@@ -1,5 +1,4 @@
 import cats.effect.*
-import cats.implicits.*
 import fs2.*
 import fs2.kafka.*
 import org.apache.kafka.clients.producer.ProducerConfig
@@ -7,9 +6,8 @@ import org.http4s.Request
 import org.http4s.ember.client.EmberClientBuilder
 import org.http4s.syntax.literals.uri
 
-import scala.jdk.CollectionConverters.*
-import scala.util.Random
 import scala.concurrent.duration.*
+import scala.util.Random
 
 object WikimediaChangesProducer extends IOApp:
 
