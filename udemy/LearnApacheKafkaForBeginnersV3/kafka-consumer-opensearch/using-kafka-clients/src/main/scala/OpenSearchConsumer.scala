@@ -20,10 +20,11 @@ object OpenSearchConsumer extends App:
     new RestHighLevelClient(RestClient.builder(new HttpHost("localhost", 9200, "http")))
 
   Using(openSearchClient) { client =>
-    if client.indices.exists(
-        new GetIndexRequest("wikimedia-recent-changes"),
-        RequestOptions.DEFAULT
-      )
+    if client.indices
+        .exists(
+          new GetIndexRequest("wikimedia-recent-changes"),
+          RequestOptions.DEFAULT
+        )
     then logger.info("Index already exists")
     else
       client.indices
