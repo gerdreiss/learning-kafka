@@ -2,29 +2,27 @@ import org.apache.http.HttpHost
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.consumer.KafkaConsumer
 import org.apache.kafka.common.serialization.StringDeserializer
+import org.opensearch.action.index.IndexRequest
+import org.opensearch.action.index.IndexResponse
 import org.opensearch.client.RequestOptions
 import org.opensearch.client.RestClient
 import org.opensearch.client.RestHighLevelClient
 import org.opensearch.client.indices.CreateIndexRequest
 import org.opensearch.client.indices.GetIndexRequest
+import org.opensearch.common.xcontent.XContentType
 import org.slf4j.LoggerFactory
 
 import java.net.URI
-import scala.jdk.CollectionConverters.*
-import scala.util.Using
-import scala.util.Using.Releasable
-
 import java.time.Duration as JDuration
-import org.opensearch.action.index.IndexRequest
-import org.opensearch.common.xcontent.XContentType
+import scala.jdk.CollectionConverters.*
 import scala.util.Try
-import org.opensearch.action.index.IndexResponse
+import scala.util.Using
 
 object OpenSearchConsumer extends App:
 
   val logger = LoggerFactory.getLogger(getClass)
 
-  given Releasable[KafkaConsumer[?, ?]] with
+  given Using.Releasable[KafkaConsumer[?, ?]] with
     def release(consumer: KafkaConsumer[?, ?]): Unit = consumer.close()
 
   val openSearchClient =
