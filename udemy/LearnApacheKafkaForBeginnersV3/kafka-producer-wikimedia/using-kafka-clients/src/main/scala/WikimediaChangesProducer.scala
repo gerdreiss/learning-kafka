@@ -17,7 +17,12 @@ object WikimediaChangesProducer extends App:
     ProducerConfig.ACKS_CONFIG                           -> "all",
     ProducerConfig.RETRIES_CONFIG                        -> Integer.MAX_VALUE.toString,
     ProducerConfig.MAX_IN_FLIGHT_REQUESTS_PER_CONNECTION -> "5",
-    ProducerConfig.DELIVERY_TIMEOUT_MS_CONFIG            -> "120000"
+    ProducerConfig.DELIVERY_TIMEOUT_MS_CONFIG            -> "120000",
+
+    // high throughput producer (at the expence of a bit of latency and CPU usage)
+    ProducerConfig.COMPRESSION_TYPE_CONFIG -> "snappy",
+    ProducerConfig.LINGER_MS_CONFIG        -> "20",
+    ProducerConfig.BATCH_SIZE_CONFIG       -> Integer.toString(32 * 1024)
   )
 
   val producer     = new KafkaProducer[String, String](properties.asJava)

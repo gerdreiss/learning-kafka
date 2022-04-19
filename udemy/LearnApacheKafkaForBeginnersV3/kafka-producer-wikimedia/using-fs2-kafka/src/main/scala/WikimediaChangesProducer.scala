@@ -32,6 +32,10 @@ object WikimediaChangesProducer extends IOApp:
     .withEnableIdempotence(true)
     .withMaxInFlightRequestsPerConnection(5)
     .withDeliveryTimeout(2.minutes)
+    // high throughput producer (at the expence of a bit of latency and CPU usage)
+    .withLinger(20.millis)
+    .withBatchSize(32 * 1024)
+    .withProperty(ProducerConfig.COMPRESSION_TYPE_CONFIG, "snappy")
 
   val recentChangesStream =
     for
