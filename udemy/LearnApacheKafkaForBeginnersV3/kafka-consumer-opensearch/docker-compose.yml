@@ -1,5 +1,9 @@
 version: '3.8'
 
+networks:
+  opensearch:
+    name: opensearch
+
 services:
   opensearch:
     image: opensearchproject/opensearch:latest
@@ -10,6 +14,8 @@ services:
     ports:
       - "9200:9200"
       - "9600:9600"
+    networks:
+      - opensearch
 
   # console at http://localhost:5601/app/dev_tools#/console
   opensearch-dashboards:
@@ -19,5 +25,5 @@ services:
     environment:
       OPENSEARCH_HOSTS: '["http://opensearch:9200"]'
       DISABLE_SECURITY_DASHBOARDS_PLUGIN: "true"
-
-
+    networks:
+      - opensearch
