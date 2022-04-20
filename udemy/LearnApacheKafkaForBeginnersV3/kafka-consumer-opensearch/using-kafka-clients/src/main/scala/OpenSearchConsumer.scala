@@ -1,18 +1,13 @@
 import com.google.gson.JsonParser
-import org.apache.http.HttpHost
-import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.consumer.KafkaConsumer
-import org.apache.kafka.common.serialization.StringDeserializer
+import org.opensearch.action.bulk.BulkRequest
 import org.opensearch.action.index.IndexRequest
 import org.opensearch.client.RequestOptions
-import org.opensearch.client.RestClient
-import org.opensearch.client.RestHighLevelClient
-import org.opensearch.client.indices.CreateIndexRequest
-import org.opensearch.client.indices.GetIndexRequest
 import org.opensearch.common.xcontent.XContentType
 import org.slf4j.LoggerFactory
 
 import java.time.Duration as JDuration
+import java.util.List as JList
 import scala.jdk.CollectionConverters.*
 import scala.util.Failure
 import scala.util.Success
@@ -26,67 +21,51 @@ object OpenSearchConsumer extends App:
   given Using.Releasable[KafkaConsumer[?, ?]] with
     def release(consumer: KafkaConsumer[?, ?]): Unit = consumer.close()
 
-  val openSearchClient =
-    new RestHighLevelClient(RestClient.builder(new HttpHost("localhost", 9200, "http")))
+  def extractId(json: String): Try[String] = Try {
+    JsonParser
+      .parseString(json)
+      .getAsJsonObject
+      .get("meta")
+      .getAsJsonObject
+      .get("id")
+      .getAsString
+  }
 
-  val kafkaConsumer = new KafkaConsumer[String, String](
-    Map(
-      ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG        -> "localhost:9092",
-      ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG   -> classOf[StringDeserializer].getName,
-      ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG -> classOf[StringDeserializer].getName,
-      ConsumerConfig.GROUP_ID_CONFIG                 -> "opensearch-consumer",
-      ConsumerConfig.AUTO_OFFSET_RESET_CONFIG        -> "latest",
-      ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG       -> "false"
-    ).asJava
-  )
+  Using.resources(OpenSearchClient.make, WikimediaRecentChangesConsumer.make) {
+    (client, consumer) =>
 
-  Using.resources(openSearchClient, kafkaConsumer) { (client, consumer) =>
-    if client.indices
-        .exists(
-          new GetIndexRequest("wikimedia-recent-changes"),
-          RequestOptions.DEFAULT
-        )
-    then logger.info("Index already exists")
-    else
-      val response = client.indices
-        .create(
-          new CreateIndexRequest("wikimedia-recent-changes"),
-          RequestOptions.DEFAULT
-        )
-      logger.info("Index created: " + response.index)
+      import OpenSearchClient.*
 
-    consumer.subscribe(List("wikimedia-recent-changes").asJava)
+      client.initializeIndex("wikimedia-recent-changes")
+      consumer.subscribe(JList.of("wikimedia-recent-changes"))
 
-    while true do
-      consumer
-        .poll(JDuration.ofMillis(3000))
-        .asScala
-        .map { record =>
-          Try(
-            client.index(
-              new IndexRequest("wikimedia-recent-changes")
-                .source(record.value, XContentType.JSON)
-                // .id(record.topic + "-" + record.partition + "-" + record.offset)
-                .id(
-                  JsonParser
-                    .parseString(record.value)
-                    .getAsJsonObject
-                    .get("meta")
-                    .getAsJsonObject
-                    .get("id")
-                    .getAsString
-                ),
-              RequestOptions.DEFAULT
-            )
+      while true do
+        val bulkRequest = consumer
+          .poll(JDuration.ofMillis(3000))
+          .asScala
+          .map { record =>
+            extractId(record.value)
+              .map(id =>
+                new IndexRequest("wikimedia-recent-changes")
+                  .id(id)
+                  .source(record.value, XContentType.JSON)
+              )
+          }
+          .foldLeft(new BulkRequest)((bulkRequest, indexRequest) =>
+            indexRequest match
+              case Success(indexRequest) =>
+                bulkRequest.add(indexRequest)
+              case Failure(exception)    =>
+                logger.error("Failed to extract id from record", exception)
+                bulkRequest
           )
-        }
-        .foreach {
-          case Success(response) =>
-            logger.info(s"Indexed record ${response.getId}")
-          case Failure(error)    =>
-            logger.error(s"Error indexing record", error)
-        }
-      // commit offsets after the batch is processed
-      logger.info("Committing offsets...")
-      consumer.commitAsync()
+
+        if bulkRequest.numberOfActions > 0 then
+          val bulkResponse = client.bulk(bulkRequest, RequestOptions.DEFAULT)
+          logger.info(s"Inserted ${bulkResponse.getItems.size} record(s)")
+
+          consumer.commitAsync()
+          logger.info("Offsets committed")
+
+          Thread.sleep(1000)
   }
