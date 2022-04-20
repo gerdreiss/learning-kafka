@@ -1,3 +1,4 @@
+import com.google.gson.JsonParser
 import org.apache.http.HttpHost
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.consumer.KafkaConsumer
@@ -60,12 +61,21 @@ object OpenSearchConsumer extends App:
         .poll(JDuration.ofMillis(3000))
         .asScala
         .map { record =>
+          // val id = record.topic + "-" + record.partition + "-" + record.offset
+          val id = JsonParser
+            .parseString(record.value)
+            .getAsJsonObject
+            .get("meta")
+            .getAsJsonObject
+            .get("id")
+            .getAsString
+
+          val request = new IndexRequest("wikimedia-recent-changes")
+            .source(record.value, XContentType.JSON)
+            .id(id)
+
           Try {
-            client.index(
-              new IndexRequest("wikimedia-recent-changes")
-                .source(record.value(), XContentType.JSON),
-              RequestOptions.DEFAULT
-            )
+            client.index(request, RequestOptions.DEFAULT)
           } recover { error =>
             logger.error(s"Error indexing record ${record.value()}", error)
             new IndexResponse.Builder().build()
