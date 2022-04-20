@@ -61,20 +61,23 @@ object OpenSearchConsumer extends App:
         .poll(JDuration.ofMillis(3000))
         .asScala
         .map { record =>
-          // val id = record.topic + "-" + record.partition + "-" + record.offset
-          val id = JsonParser
-            .parseString(record.value)
-            .getAsJsonObject
-            .get("meta")
-            .getAsJsonObject
-            .get("id")
-            .getAsString
-
-          val request = new IndexRequest("wikimedia-recent-changes")
-            .source(record.value, XContentType.JSON)
-            .id(id)
-
-          Try(client.index(request, RequestOptions.DEFAULT))
+          Try(
+            client.index(
+              new IndexRequest("wikimedia-recent-changes")
+                .source(record.value, XContentType.JSON)
+                // .id(record.topic + "-" + record.partition + "-" + record.offset)
+                .id(
+                  JsonParser
+                    .parseString(record.value)
+                    .getAsJsonObject
+                    .get("meta")
+                    .getAsJsonObject
+                    .get("id")
+                    .getAsString
+                ),
+              RequestOptions.DEFAULT
+            )
+          )
         }
         .foreach {
           case Success(response) =>
