@@ -3,10 +3,10 @@ ThisBuild / scalaVersion := "3.1.2"
 
 lazy val `kafka-consumer-opensearch` = project
   .in(file("."))
-  .aggregate(`using-kafka-clients`, `using-fs2-kafka`, `using-zio-kafka`)
+  .aggregate(`using-kafka-clients-opensearch`, `using-fs2-kafka`, `using-zio-kafka-elasticsearch`)
 
-lazy val `using-kafka-clients` = project
-  .in(file("using-kafka-clients"))
+lazy val `using-kafka-clients-opensearch` = project
+  .in(file("using-kafka-clients-opensearch"))
   .settings(commonSettings)
   .settings(
     libraryDependencies ++= Seq(
@@ -28,12 +28,13 @@ lazy val `using-fs2-kafka` = project
     )
   )
 
-lazy val `using-zio-kafka` = project
-  .in(file("using-zio-kafka"))
+lazy val `using-zio-kafka-elasticsearch` = project
+  .in(file("using-zio-kafka-elasticsearch"))
   .settings(commonSettings)
   .settings(
     libraryDependencies ++= Seq(
-      "dev.zio" %% "zio-kafka" % "2.0.0-M3"
+      "dev.zio"                %% "zio-kafka"               % "2.0.0-M3",
+      "com.sksamuel.elastic4s" %% "elastic4s-client-esjava" % "8.1.0" cross CrossVersion.for3Use2_13
     )
   )
 
