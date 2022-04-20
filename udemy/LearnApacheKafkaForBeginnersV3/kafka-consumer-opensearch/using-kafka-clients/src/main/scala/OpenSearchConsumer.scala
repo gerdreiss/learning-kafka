@@ -4,7 +4,6 @@ import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.consumer.KafkaConsumer
 import org.apache.kafka.common.serialization.StringDeserializer
 import org.opensearch.action.index.IndexRequest
-import org.opensearch.action.index.IndexResponse
 import org.opensearch.client.RequestOptions
 import org.opensearch.client.RestClient
 import org.opensearch.client.RestHighLevelClient
@@ -13,9 +12,10 @@ import org.opensearch.client.indices.GetIndexRequest
 import org.opensearch.common.xcontent.XContentType
 import org.slf4j.LoggerFactory
 
-import java.net.URI
 import java.time.Duration as JDuration
 import scala.jdk.CollectionConverters.*
+import scala.util.Failure
+import scala.util.Success
 import scala.util.Try
 import scala.util.Using
 
@@ -47,12 +47,12 @@ object OpenSearchConsumer extends App:
         )
     then logger.info("Index already exists")
     else
-      client.indices
+      val response = client.indices
         .create(
           new CreateIndexRequest("wikimedia-recent-changes"),
           RequestOptions.DEFAULT
         )
-      logger.info("Index created")
+      logger.info("Index created: " + response.index)
 
     consumer.subscribe(List("wikimedia-recent-changes").asJava)
 
@@ -74,12 +74,12 @@ object OpenSearchConsumer extends App:
             .source(record.value, XContentType.JSON)
             .id(id)
 
-          Try {
-            client.index(request, RequestOptions.DEFAULT)
-          } recover { error =>
-            logger.error(s"Error indexing record ${record.value()}", error)
-            new IndexResponse.Builder().build()
-          }
+          Try(client.index(request, RequestOptions.DEFAULT))
         }
-        .foreach(response => logger.info(response.toString))
+        .foreach {
+          case Success(response) =>
+            logger.info(s"Indexed record ${response.getId}")
+          case Failure(error)    =>
+            logger.error(s"Error indexing record", error)
+        }
   }
