@@ -16,10 +16,13 @@ import scala.util.Using
 
 object OpenSearchConsumer extends App:
 
+  val `wikimedia-recent-changes` = "wikimedia-recent-changes"
+
   val logger = LoggerFactory.getLogger(getClass)
 
   given Using.Releasable[KafkaConsumer[?, ?]] with
-    def release(consumer: KafkaConsumer[?, ?]): Unit = consumer.close()
+    def release(consumer: KafkaConsumer[?, ?]): Unit =
+      consumer.close()
 
   def extractId(json: String): Try[String] = Try {
     JsonParser
@@ -36,8 +39,8 @@ object OpenSearchConsumer extends App:
 
       import OpenSearchClient.*
 
-      client.initializeIndex("wikimedia-recent-changes")
-      consumer.subscribe(JList.of("wikimedia-recent-changes"))
+      client.initializeIndex(`wikimedia-recent-changes`)
+      consumer.subscribe(JList.of(`wikimedia-recent-changes`))
 
       while true do
         val bulkRequest = consumer
@@ -46,7 +49,7 @@ object OpenSearchConsumer extends App:
           .map { record =>
             extractId(record.value)
               .map(id =>
-                new IndexRequest("wikimedia-recent-changes")
+                new IndexRequest(`wikimedia-recent-changes`)
                   .id(id)
                   .source(record.value, XContentType.JSON)
               )

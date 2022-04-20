@@ -19,15 +19,10 @@ object OpenSearchClient:
   extension (client: RestHighLevelClient)
     def initializeIndex(name: String): Unit =
       if client.indices
-          .exists(
-            new GetIndexRequest(name),
-            RequestOptions.DEFAULT
-          )
-      then logger.info("Index already exists")
-      else
-        val response = client.indices
-          .create(
-            new CreateIndexRequest(name),
-            RequestOptions.DEFAULT
-          )
-        logger.info("Index created: " + response.index)
+          .exists(new GetIndexRequest(name), RequestOptions.DEFAULT)
+      then logger.info(s"Index $name already exists")
+      else if client.indices
+          .create(new CreateIndexRequest(name), RequestOptions.DEFAULT)
+          .isAcknowledged
+      then logger.info(s"Index $name created")
+      else logger.error(s"Index $name probably create, but not acknowledged")
