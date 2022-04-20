@@ -33,8 +33,7 @@ lazy val `using-zio-kafka-elasticsearch` = project
   .settings(commonSettings)
   .settings(
     libraryDependencies ++= Seq(
-      "dev.zio"                %% "zio-kafka"               % "2.0.0-M3",
-      "com.sksamuel.elastic4s" %% "elastic4s-client-esjava" % "8.1.0" cross CrossVersion.for3Use2_13
+      "dev.zio" %% "zio-kafka" % "2.0.0-M3"
     )
   )
 
