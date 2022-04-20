@@ -60,13 +60,16 @@ object OpenSearchConsumer extends App:
         .poll(JDuration.ofMillis(3000))
         .asScala
         .map { record =>
-          Try(
+          Try {
             client.index(
               new IndexRequest("wikimedia-recent-changes")
                 .source(record.value(), XContentType.JSON),
               RequestOptions.DEFAULT
             )
-          ).recover(_ => new IndexResponse.Builder().build())
+          } recover { error =>
+            logger.error(s"Error indexing record ${record.value()}", error)
+            new IndexResponse.Builder().build()
+          }
         }
         .foreach(response => logger.info(response.toString))
   }
