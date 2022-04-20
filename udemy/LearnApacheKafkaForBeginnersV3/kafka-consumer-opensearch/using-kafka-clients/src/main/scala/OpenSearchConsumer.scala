@@ -35,7 +35,8 @@ object OpenSearchConsumer extends App:
       ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG   -> classOf[StringDeserializer].getName,
       ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG -> classOf[StringDeserializer].getName,
       ConsumerConfig.GROUP_ID_CONFIG                 -> "opensearch-consumer",
-      ConsumerConfig.AUTO_OFFSET_RESET_CONFIG        -> "latest"
+      ConsumerConfig.AUTO_OFFSET_RESET_CONFIG        -> "latest",
+      ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG       -> "false"
     ).asJava
   )
 
@@ -85,4 +86,7 @@ object OpenSearchConsumer extends App:
           case Failure(error)    =>
             logger.error(s"Error indexing record", error)
         }
+      // commit offsets after the batch is processed
+      logger.info("Committing offsets...")
+      consumer.commitAsync()
   }
