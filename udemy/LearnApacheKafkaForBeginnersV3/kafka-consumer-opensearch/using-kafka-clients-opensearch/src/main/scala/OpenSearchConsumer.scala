@@ -56,10 +56,10 @@ object OpenSearchConsumer extends App:
           }
           .foldLeft(new BulkRequest)((bulkRequest, indexRequest) =>
             indexRequest match
-              case Success(indexRequest) =>
-                bulkRequest.add(indexRequest)
-              case Failure(exception)    =>
-                logger.error("Failed to extract id from record", exception)
+              case Success(req) =>
+                bulkRequest.add(req)
+              case Failure(err) =>
+                logger.error("Failed to extract id from record", err)
                 bulkRequest
           )
 
